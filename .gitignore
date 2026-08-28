@@ -1,0 +1,22 @@
+# Customer / confidential data must not be committed
+*.xlsx
+*.xls
+*.xlsb
+*.xlsm
+*.csv
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.zip
+
+# Local artifacts
+.DS_Store
+Thumbs.db
+~$*
+*.tmp
+*.bak
+
+# QA generated binary evidence stays on Drive
+qa_output/
+screenshots/
