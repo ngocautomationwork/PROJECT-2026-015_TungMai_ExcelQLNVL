@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simulation WORKING — mockup UX (chờ Owner duyệt)</title>
+  <style>
+    :root {
+      --excel-green: #217346;
+      --excel-tab: #f3f2f1;
+      --weekend: #c00000;
+      --sale: #c00000;
+      --header: #548235;
+      --code: #ed7d31;
+      --type: #548235;
+      --banner: #fff2cc;
+      --grid: #b4b4b4;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Calibri, Arial, sans-serif;
+      background: #e6e6e6;
+      color: #222;
+    }
+    .chrome { background: #fff; }
+    .titlebar {
+      background: #217346;
+      color: #fff;
+      padding: 6px 12px;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .ribbon {
+      border-bottom: 1px solid #c8c8c8;
+      padding: 6px 10px 8px;
+      background: linear-gradient(#fff, #f3f2f1);
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+    }
+    .rbtn {
+      border: 1px solid #8a8a8a;
+      background: #fff;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .rbtn.primary {
+      background: #217346;
+      color: #fff;
+      border-color: #0f5132;
+      font-weight: 600;
+    }
+    .rbtn:hover { filter: brightness(0.97); }
+    .hint { font-size: 11px; color: #666; padding: 0 10px 6px; background: #fff; }
+    .views { padding: 10px; }
+    .sheetwrap {
+      background: #fff;
+      border: 1px solid #bbb;
+      box-shadow: 0 1px 4px rgba(0,0,0,.12);
+      display: none;
+    }
+    .sheetwrap.active { display: block; }
+    .banner {
+      background: var(--banner);
+      border-bottom: 1px solid #f0c36d;
+      padding: 6px 10px;
+      font-size: 12px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+    .banner b { color: #7a4f01; }
+    .status { font-size: 11px; color: #5a5a5a; text-align: right; }
+    h1.title {
+      margin: 0;
+      padding: 6px 10px 4px;
+      font-size: 16px;
+      letter-spacing: .5px;
+    }
+    .scroll { overflow: auto; max-height: 62vh; }
+    table.xl {
+      border-collapse: collapse;
+      font-size: 11px;
+      min-width: 1400px;
+    }
+    table.xl th, table.xl td {
+      border: 1px solid var(--grid);
+      padding: 2px 5px;
+      white-space: nowrap;
+      height: 18px;
+    }
+    table.xl thead th {
+      background: #d6eadf;
+      font-weight: 600;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    .codeh { background: #f4b183 !important; }
+    .typeh { background: #a9d08e !important; }
+    .wknd { color: var(--weekend); font-weight: 700; }
+    .sale { color: #c00000; font-weight: 700; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .sticky1 { position: sticky; left: 0; background: #fff; z-index: 1; }
+    .item-head td { background: #f2f2f2; font-weight: 600; }
+    .neg { color: #c00000; font-weight: 700; }
+    .tabs {
+      display: flex;
+      gap: 2px;
+      padding: 6px 8px 0;
+      background: #e6e6e6;
+      border-top: 1px solid #bbb;
+      flex-wrap: wrap;
+    }
+    .tab {
+      background: #f3f2f1;
+      border: 1px solid #bbb;
+      border-bottom: none;
+      padding: 5px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 4px 4px 0 0;
+    }
+    .tab.active { background: #fff; font-weight: 600; border-top: 3px solid #217346; }
+    .tab.hiddenish { color: #999; font-style: italic; }
+    .note {
+      margin: 10px;
+      background: #fff;
+      border-left: 4px solid #217346;
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      padding: 12px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 12px;
+      min-height: 140px;
+    }
+    .card h3 { margin: 0 0 8px; font-size: 14px; color: #217346; }
+    .folder { font-family: Consolas, monospace; font-size: 12px; background: #f7f7f7; padding: 8px; }
+    ul.keep { margin: 6px 0; padding-left: 18px; }
+    .badge { display: inline-block; background: #217346; color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="chrome">
+    <div class="titlebar">
+      <span>Simulation Coway, KyungDong_WORKING.xlsx — file cũ của khách, thêm Refresh All</span>
+      <span>POC / mockup — chưa build full</span>
+    </div>
+    <div class="ribbon">
+      <button class="rbtn" onclick="show('flow')">Thư mục nguồn</button>
+      <button class="rbtn primary" onclick="alert('POC: Data > Refresh All\nSales/KHSX/Tồn nạp vào lưới cũ.\nKhông CMD, không đóng Excel.')">Data ▸ Refresh All</button>
+      <button class="rbtn" onclick="show('packing')">Packing</button>
+      <button class="rbtn" onclick="show('bom')">COWAY BOM</button>
+      <button class="rbtn" onclick="show('onway')">ON WAY</button>
+      <button class="rbtn" onclick="show('hidden')">Backend ẩn (Owner)</button>
+    </div>
+    <div class="hint">Khách chỉ làm: bỏ 3 file vào thư mục Nguồn → mở file này → bấm Refresh All. Ở lại đúng sheet Packing / ASSY / AI / SMD.</div>
+  </div>
+
+  <!-- FLOW -->
+  <section id="flow" class="sheetwrap active">
+    <div class="banner">
+      <div><b>Luồng khách:</b> bỏ file nguồn vào folder → mở Excel → Data &gt; Refresh All → xem Packing / ASSY / AI / SMD</div>
+      <div class="status">Không đóng Excel · Không CMD/PowerShell</div>
+    </div>
+    <div class="flow">
+      <div class="card">
+        <h3>1. Bỏ file tuần mới</h3>
+        <div class="folder">
+          QLNVL_2026/<br>
+          ├ Simulation_WORKING.xlsx<br>
+          └ Nguon/<br>
+          &nbsp;&nbsp;├ 01_Sales/ *Sales plan*.xlsx<br>
+          &nbsp;&nbsp;├ 02_KHSX/ *PRODUCTION PLAN*.xlsx<br>
+          &nbsp;&nbsp;└ 03_TonKho/ *ton kho*.xls*
+        </div>
+        <p>Pattern theo folder, không hard-code W36 / 20260827.</p>
+      </div>
+      <div class="card">
+        <h3>2. Mở file WORKING</h3>
+        <p>Đúng file Simulation cũ. Không MASTER, không GiaoKhach, không dashboard MRP.</p>
+        <ul class="keep">
+          <li>Giữ 5 dòng: SALE / BALANCE / Produce / Delivery / STOCK</li>
+          <li>Giữ CODE, CODE2…CODE6</li>
+          <li>Giữ tab Packing, ASSY, AI, SMD</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>3. Refresh All</h3>
+        <p>Power Query đọc file mới nhất trong mỗi folder, ghi history, chống trùng.</p>
+        <ul class="keep">
+          <li>Sales → thứ Năm trong bucket</li>
+          <li>KHSX → đúng ngày công đoạn</li>
+          <li>Tồn → snapshot theo kỳ</li>
+          <li>Refresh 2 lần: không duplicate</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>4. Xem kết quả</h3>
+        <p>Một sheet thấy: mã NVL, code cũ/mới, thành phẩm, BOM, Sales, KHSX, NCC, tồn, thừa thiếu theo ngày.</p>
+        <p><span class="badge">Hiển thị = mã thật</span> không dùng MG-0001</p>
+      </div>
+    </div>
+    <div class="note">
+      WORKING copy sẽ clone từ XLSB gốc (raw không sửa). Mockup này chỉ cho Owner duyệt bố cục trước khi Dev gắn query thật.
+    </div>
+  </section>
+
+  <!-- PACKING -->
+  <section id="packing" class="sheetwrap">
+    <div class="banner">
+      <div><b>Cập nhật tuần mới:</b> copy Sales / KHSX / Tồn vào thư mục Nguồn → <b>Data &gt; Refresh All</b>. Không cần đóng Excel.</div>
+      <div class="status">Sales: W36_2026 Sales plan_08.27.xlsx<br>KHSX: COWAY PRODUCTION PLAN 20260827.xlsx<br>Tồn: snapshot 2708 · Refresh 31/08 09:12</div>
+    </div>
+    <h1 class="title">SALES &amp; PRODUCTION PLAN</h1>
+    <div class="scroll">
+      <table class="xl">
+        <thead>
+          <tr>
+            <th>MODEL</th><th>CODE2</th><th class="codeh">CODE</th><th>ITEM</th><th>Description</th>
+            <th>Cc</th><th>MODEL</th><th>Vendor Code</th><th>Vendor name</th><th>Item PO</th><th>SHORT</th>
+            <th class="typeh">TYPE</th>
+            <th>8/20</th><th>8/21</th><th>8/22</th><th class="wknd">8/23</th><th>8/24</th><th>8/25</th><th>8/26</th>
+            <th>8/27</th><th>8/28</th><th>8/29</th><th class="wknd">8/30</th><th class="wknd">8/31</th>
+            <th class="wknd">9/1</th><th class="wknd">9/2</th><th>9/3</th><th>9/4</th><th>9/5</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="item-head">
+            <td>KDA-150WKA</td><td>MBDCA0000181</td><td>MBDCA0000180</td><td>RUBBER</td><td>RUBBER PAD</td>
+            <td>PK</td><td>KDA-150WKA</td><td>V001</td><td>RFTECH KOREA</td><td></td><td class="num">0</td>
+            <td></td><td colspan="16"></td>
+          </tr>
+          <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="sale">SALE</td>
+            <td class="num"></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="num sale">2,000</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="num sale">1,500</td><td></td><td></td>
+          </tr>
+          <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td>BALANCE</td>
+            <td class="num">35,816</td><td class="num">35,816</td><td class="num">35,816</td><td class="num">35,816</td>
+            <td class="num">35,816</td><td class="num">35,816</td><td class="num">35,816</td>
+            <td class="num">33,816</td>
+            <td class="num">33,816</td><td class="num">33,816</td><td class="num">33,816</td><td class="num">33,816</td>
+            <td class="num">33,816</td><td class="num">33,816</td>
+            <td class="num">32,316</td><td class="num">32,316</td><td class="num">32,316</td>
+          </tr>
+          <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td>Produce</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="num">800</td>
+            <td></td><td></td><td class="num">800</td><td></td><td></td><td></td><td></td>
+            <td class="num">600</td><td></td><td></td>
+          </tr>
+          <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td>Delivery plan</td>
+            <td></td><td></td><td></td><td></td><td class="num">5,000</td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td>
+          </tr>
+          <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td>STOCK</td>
+            <td class="num">35,816</td><td class="num">35,816</td><td class="num">35,816</td><td class="num">35,816</td>
+            <td class="num">40,816</td><td class="num">40,816</td><td class="num">40,016</td>
+            <td class="num">38,016</td>
+            <td class="num">38,016</td><td class="num">37,216</td><td class="num">37,216</td><td class="num">37,216</td>
+            <td class="num">37,216</td><td class="num">37,216</td>
+            <td class="num">36,616</td><td class="num">36,616</td><td class="num">36,616</td>
+          </tr>
+
+          <tr class="item-head">
+            <td>VICLEAN DSCH</td><td></td><td>MBBAA0000510</td><td>HEAT SINK</td><td>HEAT SINK AL</td>
+            <td>PBA</td><td>VICLEAN DSCH</td><td>V014</td><td>RFTECH KOREA</td><td></td><td class="num neg">-200</td>
+            <td></td><td colspan="16"></td>
+          </tr>
+          <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="sale">SALE</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="num sale">1,000</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="num sale">1,000</td><td></td><td></td>
+          </tr>
+          <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td>BALANCE</td>
+            <td class="num">800</td><td class="num">800</td><td class="num">800</td><td class="num">800</td>
+            <td class="num">800</td><td class="num">800</td><td class="num">800</td>
+            <td class="num neg">-200</td>
+            <td class="num neg">-200</td><td class="num neg">-200</td><td class="num neg">-200</td><td class="num neg">-200</td>
+            <td class="num neg">-200</td><td class="num neg">-200</td>
+            <td class="num neg">-1,200</td><td class="num neg">-1,200</td><td class="num neg">-1,200</td>
+          </tr>
+          <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td>Produce</td>
+            <td></td><td></td><td class="num">400</td><td></td><td></td><td></td><td></td>
+            <td></td><td class="num">400</td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td>
+          </tr>
+          <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td>Delivery plan</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="num">1,200</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td>
+          </tr>
+          <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td>STOCK</td>
+            <td class="num">800</td><td class="num">800</td><td class="num">400</td><td class="num">400</td>
+            <td class="num">400</td><td class="num">400</td><td class="num">1,600</td>
+            <td class="num">600</td>
+            <td class="num">200</td><td class="num">200</td><td class="num">200</td><td class="num">200</td>
+            <td class="num">200</td><td class="num">200</td>
+            <td class="num neg">-800</td><td class="num neg">-800</td><td class="num neg">-800</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      Đây là đúng bố cục Simulation: 1 dòng vật tư + 5 dòng nghiệp vụ + cột ngày.
+      SALE và Produce cùng hiện, không ghi đè. SHORT/số đỏ = thừa thiếu. Mã hiển thị là CODE thật (MBDCA…), không phải MaterialGroup.
+      Số liệu trên mockup là minh họa bố cục, chưa gắn query.
+    </div>
+  </section>
+
+  <!-- BOM -->
+  <section id="bom" class="sheetwrap">
+    <div class="banner">
+      <div><b>COWAY BOM</b> — CODE / CODE2…CODE6 cùng dòng = code thay thế, tồn cộng chung. Thêm code mới: ghi vào cột trống trên đúng dòng, Refresh All.</div>
+      <div class="status">Không rebuild file · Không kéo công thức tay</div>
+    </div>
+    <h1 class="title">COWAY BOM — mapping code cũ / mới</h1>
+    <div class="scroll">
+      <table class="xl" style="min-width:1100px">
+        <thead>
+          <tr>
+            <th>MODEL (TP)</th><th>Process</th><th class="codeh">CODE</th><th>CODE2</th><th>CODE3</th><th>CODE4</th><th>CODE5</th><th>CODE6</th>
+            <th>ITEM</th><th>Description</th><th>Qty/BOM</th><th>Vendor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>KDA-150WKA</td><td>PK</td><td>MBDCA0000180</td><td>MBDCA0000181</td><td></td><td></td><td></td><td></td>
+            <td>RUBBER</td><td>RUBBER PAD</td><td class="num">1</td><td>RFTECH KOREA</td>
+          </tr>
+          <tr>
+            <td>VICLEAN DSCH</td><td>PBA</td><td>MBBAA0000510</td><td>MBBAA0000512</td><td>MBBAA0000518</td><td></td><td></td><td></td>
+            <td>HEAT SINK</td><td>HEAT SINK AL</td><td class="num">1</td><td>RFTECH KOREA</td>
+          </tr>
+          <tr>
+            <td>KDA-150VKA</td><td>PK</td><td>MBCCA0000100</td><td></td><td></td><td></td><td></td><td></td>
+            <td>LABEL</td><td>LABEL AIR</td><td class="num">1</td><td>RFTECH KOREA</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      ON WAY/NCC giao code cũ hoặc code mới vẫn quy về cùng dòng vật tư này.
+      Audit ẩn: TSMAPCW0151V / (BAS37-D) / PK chưa kết luận MISSING_BOM cho đến khi soi hết hàng/cột ẩn trên XLSB gốc.
+    </div>
+  </section>
+
+  <!-- ON WAY -->
+  <section id="onway" class="sheetwrap">
+    <div class="banner">
+      <div><b>ON WAY / NCC theo ngày</b> — nhập trên sheet này như file cũ. Code cũ/mới map về cùng vật tư trên Packing.</div>
+      <div class="status">Giữ sheet ON WAY sẵn có</div>
+    </div>
+    <h1 class="title">ON WAY</h1>
+    <div class="scroll">
+      <table class="xl" style="min-width:900px">
+        <thead>
+          <tr>
+            <th>Date</th><th>CODE (có thể cũ hoặc mới)</th><th>ITEM</th><th>Qty</th><th>Vendor</th><th>Ghi chú</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>24/08/2026</td><td>MBDCA0000181</td><td>RUBBER PAD</td><td class="num">5,000</td><td>RFTECH KOREA</td><td>code mới, cộng vào MBDCA0000180</td>
+          </tr>
+          <tr>
+            <td>26/08/2026</td><td>MBBAA0000510</td><td>HEAT SINK AL</td><td class="num">1,200</td><td>RFTECH KOREA</td><td>code cũ</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">SALE PLAN và STOCK DAY giữ nguyên tab, được refresh từ file nguồn thay vì copy-paste.</div>
+  </section>
+
+  <!-- HIDDEN -->
+  <section id="hidden" class="sheetwrap">
+    <div class="banner">
+      <div><b>Owner only.</b> Backend Very Hidden. Khách không đi qua các sheet này để hiểu nghiệp vụ.</div>
+      <div class="status">Không phải màn hình giao khách</div>
+    </div>
+    <div class="flow">
+      <div class="card">
+        <h3>Visible (khách)</h3>
+        <ul class="keep">
+          <li>Packing, ASSY, AI, SMD</li>
+          <li>ON WAY, COWAY BOM</li>
+          <li>SALE PLAN, STOCK DAY</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Very Hidden</h3>
+        <ul class="keep">
+          <li>_CFG (đường dẫn + pattern)</li>
+          <li>_HIST_SALES / _HIST_PROD / _HIST_STOCK</li>
+          <li>_PQ_* (output Power Query)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Không làm</h3>
+        <ul class="keep">
+          <li>Không CONTROL / MASTER__ / DATA__ dashboard</li>
+          <li>Không MaterialGroup là mã chính</li>
+          <li>Không bắt đóng Excel chạy script</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>History</h3>
+        <ul class="keep">
+          <li>File tuần mới mất tuần cũ → tuần cũ vẫn trong _HIST</li>
+          <li>Tuần có trong file mới → replace (sửa được số)</li>
+          <li>Refresh 2 lần → distinct, không nhân đôi</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="tabs">
+    <div class="tab" onclick="show('onway')">ON WAY</div>
+    <div class="tab" onclick="show('bom')">COWAY BOM</div>
+    <div class="tab" onclick="show('packing')">SALE PLAN</div>
+    <div class="tab" onclick="show('onway')">STOCK DAY</div>
+    <div class="tab active" id="tab-packing" onclick="show('packing')">Packing</div>
+    <div class="tab" onclick="show('packing')">ASSY</div>
+    <div class="tab" onclick="show('packing')">AI</div>
+    <div class="tab" onclick="show('packing')">SMD</div>
+    <div class="tab hiddenish" onclick="show('hidden')">_CFG (ẩn)</div>
+  </div>
+
+  <script>
+    function show(id) {
+      if (!document.getElementById(id)) id = 'flow';
+      document.querySelectorAll('.sheetwrap').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      if (id === 'packing') document.getElementById('tab-packing').classList.add('active');
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      show((location.hash || '#flow').replace('#', ''));
+    });
+  </script>
+</body>
+</html>
